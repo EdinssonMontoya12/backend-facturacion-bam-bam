@@ -73,6 +73,8 @@ defactura.consultar = async (req, res) => {
             OMENSAJE: 'No se ha podido consultar la defactura',
             err: e.message
         }
+
+        return res.json(data)
     }
 }
 
@@ -103,6 +105,25 @@ defactura.actualizar = async (deEliminar, deInsertar, facturaid, sucid) => {
         return { OSUCCESS: 1}
     else return { OSUCCESS: 0}
 
+}
+
+defactura.consultarxProduto = async (productoid) => {
+
+    const query = `Select * from defactura d where d.articuloid = ?`
+    const result = await pool.query(query, [productoid])
+    
+    return result[0]
+}
+
+defactura.sePuedeEliminarProducto = async (req, res) => {
+    
+    const response = await defactura.consultarxProduto(req.params.id)
+
+    if(response.length > 0){
+        res.json({ OSUCCESS: 0, OMENSAJE: 'El producto esta asociado a una factura'})
+    }else {
+        res.json({ OSUCCESS: 1, OMENSAJE: 'Puede eliminar el producto'})
+    }
 }
 
 export default defactura

@@ -237,17 +237,16 @@ factura.reversar = async (req, res) => {
         const query = "CALL SUPER_REVERSAR_FACTURA(?)"
 
         const response = await pool.query(query, [req.params.id])
-
+        console.log(response[0][0][0])
         if (response[0][0][0].OSUCCESS === 1) {
             return res.json(response[0][0][0])
         } else {
             console.log(response[0][0][0])
             return res.json({
                 OSUCCESS: 0,
-                OMENSAJE: 'No se ha logrado asentar la factura'
+                OMENSAJE: 'No se ha logrado reversar la factura'
             })
         }
-
     } catch (e) {
 
         const data = {
@@ -258,13 +257,6 @@ factura.reversar = async (req, res) => {
         console.log(data)
         return res.json(data)
     }
-}
-
-factura.sePuedeReversar = async (req, res) => {
-    return res.json({
-        OSUCCESS: 0,
-        OMENSAJE: 'Esta factura no se puede reversar'
-    })
 }
 
 export default factura
