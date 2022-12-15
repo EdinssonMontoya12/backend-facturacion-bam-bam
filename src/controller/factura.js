@@ -16,11 +16,12 @@ factura.insertar = async (req, res) => {
             req.body.tercero,
             req.body.total
         ]
-
+        console.log(factura);
         const consulta = "CALL SUPER_INSERTAR_FACTURA(?,?,?,?,?,?,?,?,?)"
         var result = await pool.query(consulta, factura);
 
         result = result[0][0][0]
+        console.log(result);
 
         if (result.OSUCCESS === 1) {
 
@@ -144,13 +145,12 @@ factura.actualizar = async (req, res) => {
         console.log(factura)
         const query = "CALL SUPER_ACTUALIZAR_FACTURA(?,?,?,?,?)"
         const result = await pool.query(query, factura);
-        if(result[0][0][0].OSUCCESS === 1){
+        if (result[0][0][0].OSUCCESS === 1) {
             const resultDeta = await defactura.actualizar(req.body.detalleDelete, req.body.detalle, req.params.id, req.body.sucid)
-            console.log(resultDeta)
-            if(resultDeta.OSUCCESS === 1) return res.json({ OSUCCESS: 1, OMENSAJE: 'Se ha actualizado la factura'})
-            else return res.json({ OSUCCESS: 0, OMENSAJE: 'No se ha logrado actualizar la factura'})
 
-        }else{
+            if (resultDeta.OSUCCESS === 1) return res.json({ OSUCCESS: 1, OMENSAJE: 'Se ha actualizado la factura' })
+            else return res.json({ OSUCCESS: 0, OMENSAJE: 'No se ha logrado actualizar la factura' })
+        } else {
             return res.json({
                 OSUCCESS: 0,
                 OMENSAJE: 'No se ha logrado actualizar la factura'
